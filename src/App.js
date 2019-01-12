@@ -1,26 +1,42 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+
 import './App.css';
+import {recipes} from './tempList';
+import RecipeList from './components/RecipeList';
+import RecipeDetails from './components/RecipeDetails';
+
 
 class App extends Component {
+
+  state = {
+    recipes:[],
+    url:"https://www.food2fork.com/api/search?key=9e3514ae5e2b5ceadbb71bf2c87b07c4"
+  }
+
+  componentDidMount(){
+    this.getRecipes()
+  }
+
+  async getRecipes(){
+    try{
+      
+    const data=await fetch(this.state.url);
+    const jsonData  = await data.json();
+    this.setState({
+      recipes:jsonData.recipes
+    })
+    }catch(err){
+      console.log(err+" : in getRecipes()");
+    }
+  }
+
   render() {
+    console.log(this.state.recipes);
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <React.Fragment>
+        <RecipeList />
+        <RecipeDetails />
+      </React.Fragment>
     );
   }
 }
